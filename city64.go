@@ -5,6 +5,7 @@ import (
 	"hash"
 )
 
+// City64 ...
 type City64 struct {
 	s []byte
 }
@@ -12,34 +13,40 @@ type City64 struct {
 var _ hash.Hash64 = (*City64)(nil)
 var _ hash.Hash = (*City64)(nil)
 
+// New64 ...
 func New64() hash.Hash64 {
 	return &City64{}
 }
 
-func (this *City64) Sum(b []byte) []byte {
+// Sum ...
+func (c *City64) Sum(b []byte) []byte {
 	b2 := make([]byte, 8)
-	binary.BigEndian.PutUint64(b2, this.Sum64())
+	binary.BigEndian.PutUint64(b2, c.Sum64())
 	b = append(b, b2...)
 	return b
 }
 
-func (this *City64) Sum64() uint64 {
-	return CityHash64(this.s, uint32(len(this.s)))
+// Sum64 ...
+func (c *City64) Sum64() uint64 {
+	return CityHash64(c.s, uint32(len(c.s)))
 }
 
-func (this *City64) Reset() {
-	this.s = this.s[0:0]
+// Reset ...
+func (c *City64) Reset() {
+	c.s = c.s[0:0]
 }
 
-func (this *City64) BlockSize() int {
+// BlockSize ...
+func (c *City64) BlockSize() int {
 	return 1
 }
 
-func (this *City64) Write(s []byte) (n int, err error) {
-	this.s = append(this.s, s...)
+func (c *City64) Write(s []byte) (n int, err error) {
+	c.s = append(c.s, s...)
 	return len(s), nil
 }
 
-func (this *City64) Size() int {
+// Size 8
+func (c *City64) Size() int {
 	return 8
 }

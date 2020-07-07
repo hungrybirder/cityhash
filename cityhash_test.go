@@ -5,19 +5,19 @@ import (
 )
 
 const (
-	kSeed0    uint64 = 1234567
-	kSeed1    uint64 = k0
-	kDataSize int    = 1 << 20
-	kTestSize int    = 300
+	seed0    uint64 = 1234567
+	seed1    uint64 = k0
+	dataSize int    = 1 << 20
+	testSize int    = 300
 )
 
 var (
-	kSeed128 Uint128 = Uint128{kSeed0, kSeed1}
-	data     [kDataSize]byte
-	errors   int = 0 // global error count
+	seed128 Uint128 = Uint128{seed0, seed1}
+	data    [dataSize]byte
+	errors  int = 0 // global error count
 )
 
-var testdata = [kTestSize][]uint64{
+var testdata = [testSize][]uint64{
 	{
 		0x9ae16a3b2f90404f, 0x75106db890237a4a, 0x3feac5f636039766, 0x3df09dfc64c09a2b, 0x3cb540c392e51e29, 0x6b56343feac0663, 0x5b7bc50fd8e8ad92, 0x3df09dfc64c09a2b, 0x3cb540c392e51e29, 0x6b56343feac0663, 0x5b7bc50fd8e8ad92, 0x95162f24e6a5f930, 0x6808bdf4f1eb06e0, 0xb3b1f3a67b624d82, 0xc9a62f12bd4cd80b, 0xdc56d17a,
 	},
@@ -924,7 +924,7 @@ var testdata = [kTestSize][]uint64{
 func setup() {
 	var a uint64 = 9
 	var b uint64 = 777
-	for i := 0; i < kDataSize; i++ {
+	for i := 0; i < dataSize; i++ {
 		a += b
 		b += a
 		a = (a ^ (a >> 41)) * k0
@@ -943,12 +943,12 @@ func check(expected, actual uint64, t *testing.T) {
 
 func test(expected []uint64, offset int, length int, t *testing.T) {
 	var u Uint128 = CityHash128(data[offset:], uint32(length))
-	var v Uint128 = CityHash128WithSeed(data[offset:], uint32(length), kSeed128)
+	var v Uint128 = CityHash128WithSeed(data[offset:], uint32(length), seed128)
 
 	check(expected[0], CityHash64(data[offset:], uint32(length)), t)
 	check(expected[15], uint64(CityHash32(data[offset:], uint32(length))), t)
-	check(expected[1], CityHash64WithSeed(data[offset:], uint32(length), kSeed0), t)
-	check(expected[2], CityHash64WithSeeds(data[offset:], uint32(length), kSeed0, kSeed1), t)
+	check(expected[1], CityHash64WithSeed(data[offset:], uint32(length), seed0), t)
+	check(expected[2], CityHash64WithSeeds(data[offset:], uint32(length), seed0, seed1), t)
 	check(expected[3], u.Lower64(), t)
 	check(expected[4], u.Higher64(), t)
 	check(expected[5], v.Lower64(), t)
@@ -958,11 +958,10 @@ func test(expected []uint64, offset int, length int, t *testing.T) {
 func TestHash(t *testing.T) {
 	setup()
 	var i int
-	for i = 0; i < kTestSize-1; i++ {
+	for i = 0; i < testSize-1; i++ {
 		t.Logf("INFO: offset = %d, length = %d", i*i, i)
-
 		test(testdata[i], i*i, i, t)
 	}
-	test(testdata[i], 0, kDataSize, t)
+	test(testdata[i], 0, dataSize, t)
 	return
 }
