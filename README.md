@@ -12,7 +12,7 @@ go get github.com/hungrybirder/cityhash
 
 # Install cityhash64 cli #
 ```bash
-go get github.com/hungrybirder/cityhash/cmd/cityhash64@master
+go get -u github.com/hungrybirder/cityhash/cmd/cityhash64@master
 
 ```
 
