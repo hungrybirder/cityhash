@@ -35,7 +35,6 @@ func process(keys []string, seed uint64) {
 			fmt.Printf("%-30d\t%-30x\t%s\n", hashVal, hashVal, key)
 		}
 	} else {
-		// fmt.Printf("%-30s\t%-30s\t%s\n", "hash", "hash(hex)", "key")
 		for _, key := range keys {
 			keyBytes := []byte(key)
 			keyLen := uint32(len(keyBytes))
